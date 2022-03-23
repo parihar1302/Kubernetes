@@ -1,0 +1,37 @@
+Kubernetes:- It manages all the containers by providing cluster/Orchestration among them. 
+=========    Monitoring, scailing, networking, load balancing, contorlling & Deploying an app in container, all these can be done by Kubernetes.
+             If any container goes down, Immidiatly will restrat new container. If Complete node gets killed, Immdiatly it will shift the traffic on to other Node.
+             It automatically takes care of Rollout & Rollback to avoide the downtime.
+     
+Componant:- a.) Secreate
+            b.) Config Maps
+     
+Features:- i.) Automatic Bin Packing.
+          ii.) Service Descovery & Load Balancing
+         iii.) Storage Orchestartion
+          iv.) Self-Healing
+    
+ 
+ Container >>> Pods >>> Worker Nodes(ec2) >>> Cluster
+    
+
+Cluster:- Its a collection of machines called node. Every cluster will have one Master Node & One Worker Node atleast.
+          
+
+Conainer:- It's an isolated space where you can deploy & run your application. It is compatible with all OS like:- Mac, Windows & Linux
+           limit 300000 in a custer.
+
+Pods:- Collection of containers. It could have one or more container. It gets own IP address. Pods
+       Multiple Pods can be run in parallaer & can scale up as well.
+       Limit is 15000 in a cluster.
+
+Nodes:- Node could be a physical or Virtual Machine or EC2. Node will act like either Master or Worker. 
+        It's a Collection of Pods. It could have one or more Pods. Master node manages both Worker Node & Pods.
+        Limit is upto 5000 in a cluster. In a Node, you can have only 100 Pods.
+
+
+Replication Controller (rc or rcs):- It makes sure that at any cost these or that numbers of Pods should be existed. If Pods failes than immidatly it can be replaced.
+                         Replication controller gets info from Manifest file about how many container has to be run.
+                         
+  
+Manifest File:- it Contains how many Pods should be available & than it tells to replications controller to maintain the desire no. of Pods.
