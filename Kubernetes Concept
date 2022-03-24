@@ -26,12 +26,37 @@ Pods:- Collection of containers. It could have one or more container. It gets ow
        Limit is 15000 in a cluster.
 
 Nodes:- Node could be a physical or Virtual Machine or EC2. Node will act like either Master or Worker. 
-        It's a Collection of Pods. It could have one or more Pods. Master node manages both Worker Node & Pods.
+        Worker Node is a Collection of Pods. It could have one or more Pods. 
+        Master node manages both Worker Node & Pods. If there's any fail over in Node , so it immidiatly shift the traffic on other worker node.
         Limit is upto 5000 in a cluster. In a Node, you can have only 100 Pods.
 
+
+Master Node Componant:- a.) API server
+                        b.) Scheduler
+                        c.) Control Manager
+                        d.) etcd
+
+
+Worker Node Componant:- a.) Kubelet:- It's an agent/utility which runs on Worker node which communicate with Master Node through API server.
+                                  It gets the Pods info from PodSpecs to make sure that Pods are running fine, if Pods doesn't work fine than it will restart the Pods on Same Node or different Node.
+                                  Kubelet only manage those containers which are created by K8S.
+                                  
+                        b.) Kube-Proxy:- It's a network configuration which runs on every nodes.
+                        
+                        C.) Container Runtime:- It is responsible running container inside the Pod.
 
 Replication Controller (rc or rcs):- It makes sure that at any cost these or that numbers of Pods should be existed. If Pods failes than immidatly it can be replaced.
                          Replication controller gets info from Manifest file about how many container has to be run.
                          
   
 Manifest File:- it Contains how many Pods should be available & than it tells to replications controller to maintain the desire no. of Pods.
+
+
+## K8S Online for Practice:-
+--------------------------
+
+1.) Kubrnetes Playground by Katacoda is a website where you don;t have to install anything & can practice k8S online.
+
+2.) Play with K8S
+
+3.) Play with Kubernetes Classroom
