@@ -1,5 +1,5 @@
 Kubernetes:- It manages all the containers by providing cluster/Orchestration among them. 
-=========    Monitoring, scailing, networking, load balancing, contorlling & Deploying an app in container, all these can be done by Kubernetes.
+=========    Monitoring, scailing, High Availability, Disastor recovery,  networking, load balancing, contorlling & Deploying an app in container, all these can be done by Kubernetes.
              If any container goes down, Immidiatly will restrat new container. If Complete node gets killed, Immdiatly it will shift the traffic on to other Node.
              It automatically takes care of Rollout & Rollback to avoide the downtime.
      
@@ -21,20 +21,30 @@ Cluster:- Its a collection of machines called node. Every cluster will have one 
 Conainer:- It's an isolated space where you can deploy & run your application. It is compatible with all OS like:- Mac, Windows & Linux
            limit 300000 in a custer.
 
-Pods:- Collection of containers. It could have one or more container. It gets own IP address. Pods
-       Multiple Pods can be run in parallaer & can scale up as well.
+Pods:- Collection of containers. It could have one or more container. It gets it's own IP address. So with this internal IP address only , Pods can connect to each other. 
+       Multiple Pods can be run in parallaer & can scale up as well.   
        Limit is 15000 in a cluster.
+       Pods gets new IP assigned on it's  re-creation. So the Drawback is everytime you need to change your Application container IP to communicate with DB IP, To avoide this issue, K8S has come up with 'Service' solutions.
+
+Service:- It's like a Static/Permanant IP Address which attach to each Pods. Also, Service is not dependent on Pods lifecycle, Means if Pods gets shutdown & new Pods provision that time IP Address  will not change becaue of Service endpoint. So , your Application container can communicate to DB container without any disruption. 
+          Type:- a.) External service:- For Web container & Application Container used & can be accesible through internet browser/url by Ingress. ex:- http://node1IPadd:8080
+                 b.) Internal Service:- Used for DB container & can be accesible through internet browser/url by using Ingress(security Group in AWS).
+
 
 Nodes:- Node could be a physical or Virtual Machine or EC2. Node will act like either Master or Worker. 
-        Worker Node is a Collection of Pods. It could have one or more Pods. 
+        Worker Node is a Collection of Pods. It could have one or more Pods. Worker Nodes have application running container. 
         Master node manages both Worker Node & Pods. If there's any fail over in Node , so it immidiatly shift the traffic on other worker node.
         Limit is upto 5000 in a cluster. In a Node, you can have only 100 Pods.
 
 
-Master Node Componant:- a.) API server
-                        b.) Scheduler
-                        c.) Control Manager
-                        d.) etcd
+Master Node Componant:- If you lose the master node than you can not access the cluster anymore. So , you should have atleast two master node in production.
+                        a.) API server :- It is also a container. It's an EntryPoint to K8S cluster on which different K8S client can talk to  ex:- UI Dashboard, Script or CLI.
+                        
+                        b.) Scheduler:- It Shedules the next container in same/different Worker Node, based on the resource availabiity & the work load it carries.
+                        
+                        c.) Control Manager:- it tracks, what is happning inside the cluster. Like if container dies or node goes down these info it keeps.
+                        
+                        d.) etcd:- It has all the configuration data like cluster state, container state, node state & etc. Back & restore of whole cluster state can be perfomed based on 'etcd snapshot' only because it keeps status.
 
 
 Worker Node Componant:- a.) Kubelet:- It's an agent/utility which runs on Worker node which communicate with Master Node through API server.
@@ -44,6 +54,10 @@ Worker Node Componant:- a.) Kubelet:- It's an agent/utility which runs on Worker
                         b.) Kube-Proxy:- It's a network configuration which runs on every nodes.
                         
                         C.) Container Runtime:- It is responsible running container inside the Pod.
+
+
+Virtual Network :- Master node container can communicate to Worker node container wih the help of Virtual Network.
+
 
 Replication Controller (rc or rcs):- It makes sure that at any cost these or that numbers of Pods should be existed. If Pods failes than immidatly it can be replaced.
                          Replication controller gets info from Manifest file about how many container has to be run.
