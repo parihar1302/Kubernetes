@@ -12,7 +12,7 @@ Features:- i.) Automatic Bin Packing.
           iv.) Self-Healing
     
  
- Container >>> Pods >>> Worker Nodes(ec2) >>> Cluster
+Container >>> Pods >>> Worker Nodes(ec2) >>> Cluster
     
 
 Cluster:- Its a collection of machines called node. Every cluster will have one Master Node & One Worker Node atleast.
@@ -53,10 +53,16 @@ Worker Node Componant:- a.) Kubelet:- It's an agent/utility which runs on Worker
                                   
                         b.) Kube-Proxy:- It's a network configuration which runs on every nodes.
                         
-                        C.) Container Runtime:- It is responsible running container inside the Pod.
+                        C.) Container Runtime:- It is responsible for running container inside the Pod.
 
 
 Virtual Network :- Master node container can communicate to Worker node container wih the help of Virtual Network.
+
+
+
+                                                  Virtual Network             
+           Worker Node (kubelet Agent) ---------------------------------> (API server) Master Node
+
 
 
 Replication Controller (rc or rcs):- It makes sure that at any cost these or that numbers of Pods should be existed. If Pods failes than immidatly it can be replaced.
