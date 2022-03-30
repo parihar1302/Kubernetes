@@ -64,8 +64,20 @@ Virtual Network :- Master node container can communicate to Worker node containe
            Worker Node (kubelet Agent) ---------------------------------> (API server) Master Node
 
 
+Config Map :- It contains configuration data like DB url or other application URL.Pods gets the data from config map only. You can modify config map based on the requirement.
+               ex:- DB_URL = mongo-db
 
-Replication Controller (rc or rcs):- It makes sure that at any cost these or that numbers of Pods should be existed. If Pods failes than immidatly it can be replaced.
+
+Secret:- Secreat is like a Config map but it stores sensitive data like credentials, password & ceritificates which are encoded with base64 instead off plain text file.
+
+
+
+
+### K8S Volume Or Storage:- If you retstart the Pod, your all data will go away because K8S doesn't manage Data persistance . To avoide this, we can either attache the local machine or remote storage (cloud) to the Pod.
+=========================== It's like a external hard-drive.
+
+
+Replication Controller (rc or rcs):- It makes sure that at any cost these or that numbers of Pods should be existed. If Pods failes than immidiatly it can be replaced.
                          Replication controller gets info from Manifest file about how many container has to be run.
                          
   
@@ -80,3 +92,21 @@ Manifest File:- it Contains how many Pods should be available & than it tells to
 2.) Play with K8S
 
 3.) Play with Kubernetes Classroom
+
+
+
+
+
+
+
+
+## Interview Questions & Answeres
+====================================
+
+Q.) Secreat in K8S?
+A.) Secreat is like a Config map but it containes sensitive data like credentials which are encoded with base64 instead off plain text file.
+
+
+
+
+
