@@ -38,7 +38,7 @@ Nodes:- Node could be a physical or Virtual Machine or EC2. Node will act like e
 
 
 Master Node Componant:- If you lose the master node than you can not access the cluster anymore. So , you should have atleast two master node in production.
-                        a.) API server :- It is also a container. It's an EntryPoint to K8S cluster on which different K8S client can talk to  ex:- UI Dashboard, Script or CLI.
+                        a.) API server :- It is also a container. It's an EntryPoint to K8S cluster on which different K8S client can talk to  ex:- UI Dashboard, Script (api) or CLI (Kubectl).
                         
                         b.) Scheduler:- It Shedules the next container in same/different Worker Node, based on the resource availabiity & the work load it carries.
                         
