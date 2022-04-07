@@ -1,0 +1,10 @@
+Kubernetes set up & commands:-
+================================
+
+* Install Minikub
+
+* Install driver
+
+* kubectl get node   ##{list of all node}
+
+* echo -n mongouser | base64                ##{to encode the data}
