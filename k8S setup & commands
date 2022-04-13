@@ -1,6 +1,57 @@
-Kubernetes set up & commands:-
-================================
+Kubernetes set up & commands:-             https://thenewstack.io/how-to-deploy-a-kubernetes-cluster-with-ubuntu-server-18-04/
+================================           https://www.youtube.com/watch?v=vpEDUmt_WKA
 
+Step-1.) Install docker in all (Master & Worker node) machine in Ubuntu 18.04 LTS.
+===================================================================================
+
+* curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg          ##{add gps key}
+
+* echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  
+* sudo apt-get install docker-ce docker-ce-cli containerd.io               ##{install latest version of Docker engine}
+      OR
+  sudo apt-get install docker.io
+  
+* apt update
+
+* sudo usermod -aG docker $USER        ##{adding user to docker group}
+
+* sudo systemctl start docker
+
+* sudo systemctl enable docker
+
+
+
+Step-2.) Installation of Kubernetes in Ubuntu 18.04 LTS on all machine
+=======================================================================
+
+* curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add              ##{adding GPG key}
+
+* cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+> deb https://apt.kubernetes.io/ kubernetes-xenial main
+> EOF
+      OR
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+
+* sudo apt-get install kubeadm kubelet kubectl -y             ##{installing dependancy}
+
+* apt update
+
+* sudo hostnamectl set-hostname HOSTNAME        ##{to set hostname for master & worker node to identify}
+
+* sudo nano /etc/hosts
+192.168.1.218 kubemaster
+192.168.1.219 kubenode1
+192.168.1.219 kubenode2
+
+
+## Networking adjustment:-
+---------------------------
+* echo "net.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf       ##{Network adjustement}
+
+* sudo sysctl -p     #$%@ Error in this coomand
 * Install Minikub
 
 * Install driver
@@ -8,3 +59,6 @@ Kubernetes set up & commands:-
 * kubectl get node   ##{list of all node}
 
 * echo -n mongouser | base64                ##{to encode the data}
+
+
+======================================================
