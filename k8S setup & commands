@@ -62,3 +62,11 @@ sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
 
 
 ======================================================
+
+sudo apt-get install kubeadm=1.13.4-00 kubelet=1.13.4-00 kubectl=1.13.4-00 kubernetes-cni=0.6.0-00
+
+error less than 1 cpu
+solution:- https://codeutility.org/kubernetes-kubadm-init-error-cpus-1-is-less-than-required-2-stack-overflow/
+kubeadm init --pod-network-cidr=10.244.0.0/16  --ignore-preflight-errors=NumCPU  --ignore-preflight-errors=Mem
+   OR
+kubeadm init --ignore-preflight-errors=all
