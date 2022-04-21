@@ -6,68 +6,10 @@ Step-1.) Install docker in all (Master & Worker node) machine in Ubuntu 18.04 LT
 
 * Requirement:- Should have enf RAM & minimum 2 vCPU (ex:- t3 type) otherwise, you will get an error while initializing kubadm & mentioned solution below that itself.
   -------------
-  
-* curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg          ##{add gps key}
 
-* echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  
-* sudo apt-get install docker-ce docker-ce-cli containerd.io               ##{install latest version of Docker engine}
-      OR
-  sudo apt-get install docker.io
-  
-* apt update
-
-* sudo usermod -aG docker $USER        ##{adding user to docker group}
-
-* sudo systemctl start docker
-
-* sudo systemctl enable docker
-
-
-
-Step-2.) Installation of Kubernetes in Ubuntu 18.04 LTS on all machine
-=======================================================================
-
-* curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add              ##{adding GPG key}
-
-* cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-> deb https://apt.kubernetes.io/ kubernetes-xenial main
-> EOF
-      OR
-sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
-
-* sudo apt-get install kubeadm kubelet kubectl -y             ##{installing dependancy}
-
-* apt update
-
-* sudo hostnamectl set-hostname HOSTNAME        ##{to set hostname for master & worker node to identify}
-
-* sudo nano /etc/hosts
-192.168.1.218 kubemaster
-192.168.1.219 kubenode1
-192.168.1.219 kubenode2
-
-
-## Networking adjustment:-
----------------------------
-* echo "net.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf       ##{Network adjustement}
-
-* sudo sysctl -p     #$%@ Error in this coomand
-* Install Minikub
-
-* Install driver
-
-* kubectl get node   ##{list of all node}
-
-* echo -n mongouser | base64                ##{to encode the data}
-=============================================================================
-
-
-## Install and Deploy Kubernetes on Ubuntu 18.04 LTS                    https://medium.com/@karthikeyan_krishnaswamy/setting-up-a-kubernetes-cluster-on-ubuntu-18-04-4a89c74420f9
-======================================================                  https://vitux.com/install-and-deploy-kubernetes-on-ubuntu/
-                                                                        https://www.linuxtechi.com/install-kubernetes-1-7-centos7-rhel7/
+## Install and Deploy Kubernetes on Ubuntu 18.04 LTS in EC2                   https://medium.com/@karthikeyan_krishnaswamy/setting-up-a-kubernetes-cluster-on-ubuntu-18-04-4a89c74420f9
+============================================================                  https://vitux.com/install-and-deploy-kubernetes-on-ubuntu/
+                                                                              https://www.linuxtechi.com/install-kubernetes-1-7-centos7-rhel7/
 Step-1.) Installing Docker on Master & Worker node:-
 ---------------------------------------------------------
 * apt update
@@ -125,9 +67,8 @@ EOF
 
 ## Step-3.) BootStrapping on Master node:-
 ============================================
+* sudo kubeadm init --pod-network-cidr=10.244.0.0/16          ##{Initialize Kubernetes on the master node}
 
-
-* sudo kubeadm init --pod-network-cidr=10.244.0.0/16          ##{Initialize Kubernetes on the master node} 
 ##NOTE:- ABove Will work if you select t3 type instance but not for t2. To remove error , must have to follow below steps.
 ## ERROR:- ERROR NumCPU]: the number of available CPUs 1 is less than the required 2       
 
@@ -166,9 +107,40 @@ ex:- kubeadm join 172.31.24.216:6443 --token lg09jd.5q5vwrspup5xyffv --discovery
 ## Now go back to MASTER node & verify no. of nodes
 ---------------------------------------------------------
 
-* kubectl get nodes
+* kubectl get nodes         ##{list nodes}
 
-======================================================
+## Note:- You will see that the status of the master node is “not ready” yet. 
+          It is because no pod has yet been deployed on the master node and thus the Container Networking Interface is empty.
+
+
+
+Step-4.) Configuring Cluster Networking to perform cluster fully fuctioned in all node (Master & Worker):-
+==========================================================================================================
+
+* echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+
+* sudo sysctl -p
+
+
+
+Step-5.) deploying a Flannel pod network on our cluster through Master node:-
+==============================================================================
+
+* sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml          ##{ A pod network is a medium of communication between the nodes of a network}
+      OR
+  sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml          
+
+* kubectl get pods --all-namespaces          ##{verify the status of the network, list of system pod}
+      OR
+  kubectl get pods -n kube-system
+
+* sudo kubectl get nodes       ##{now master node must be in ready state}
+
+====================================================================================================================================================
+THE END
+
+
+
 Senerio:-
 ===========
 
