@@ -4,6 +4,9 @@ Kubernetes set up & commands:-             https://thenewstack.io/how-to-deploy-
 Step-1.) Install docker in all (Master & Worker node) machine in Ubuntu 18.04 LTS.
 ===================================================================================
 
+* Requirement:- Should have enf RAM & minimum 2 vCPU (ex:- t3 type) otherwise, you will get an error while initializing kubadm & mentioned solution below that itself.
+  -------------
+  
 * curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg          ##{add gps key}
 
 * echo \
@@ -59,12 +62,121 @@ sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
 * kubectl get node   ##{list of all node}
 
 * echo -n mongouser | base64                ##{to encode the data}
+=============================================================================
 
+
+## Install and Deploy Kubernetes on Ubuntu 18.04 LTS                    https://medium.com/@karthikeyan_krishnaswamy/setting-up-a-kubernetes-cluster-on-ubuntu-18-04-4a89c74420f9
+======================================================                  https://vitux.com/install-and-deploy-kubernetes-on-ubuntu/
+                                                                        https://www.linuxtechi.com/install-kubernetes-1-7-centos7-rhel7/
+Step-1.) Installing Docker on Master & Worker node:-
+---------------------------------------------------------
+* apt update
+
+* sudo apt install curl vim net-tools openssh-server
+
+* sudo swapoff -a                              ##{disabling swap memory since K8S doesn't perform well on the system which is using swap meory }
+
+* sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+* sudo add-apt-repository \
+"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) \
+stable"
+
+* sudo apt-get update
+
+* sudo apt-get install -y docker-ce=18.06.1~ce~3-0~ubuntu
+     OR
+  sudo apt install docker.io
+  
+* sudo apt-mark hold docker-ce
+
+* sudo docker version
+
+* sudo systemctl enable docker
+
+
+
+## Step-2.) Install Kubeadm, Kubelet and Kubectl on Master & Worker node:-
+=============================================================================
+* sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+* cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+* cat /etc/apt/sources.list.d/kubernetes.list
+
+* sudo apt-get update
+
+* sudo apt-get install -y kubelet=1.12.7-00 kubeadm=1.12.7-00 kubectl=1.12.7-00         ## ERROR ##
+## ERROR:- E: Unable to correct problems, you have held broken packages.
+
+## SOLUTION:- sudo apt-get install kubeadm=1.13.4-00 kubelet=1.13.4-00 kubectl=1.13.4-00 kubernetes-cni=0.6.0-00
+                  OR
+              sudo apt install kubeadm
+     
+* sudo kubeadm version
+
+* sudo hostnamectl set-hostname master-node           ##{ Run on Master node}
+* sudo hostnamectl set-hostname worker-node           ## {run on worker node}
+
+
+
+## Step-3.) BootStrapping on Master node:-
+============================================
+
+
+* sudo kubeadm init --pod-network-cidr=10.244.0.0/16          ##{Initialize Kubernetes on the master node} 
+##NOTE:- ABove Will work if you select t3 type instance but not for t2. To remove error , must have to follow below steps.
+## ERROR:- ERROR NumCPU]: the number of available CPUs 1 is less than the required 2       
+
+## SOLUTION:- {https://codeutility.org/kubernetes-kubadm-init-error-cpus-1-is-less-than-required-2-stack-overflow/}
+* kubeadm init --pod-network-cidr=10.244.0.0/16  --ignore-preflight-errors=NumCPU  --ignore-preflight-errors=Mem
+      OR
+  kubeadm init --ignore-preflight-errors=all
+      OR
+  sudo kubeadm reset
+
+* Copy the Output, this contains token that needs to be pasted in Worker node to join in a cluster
+ex:- kubeadm join 172.31.24.216:6443 --token lg09jd.5q5vwrspup5xyffv --discovery-token-ca-cert-hash sha256:be1f55415725157a86efbdd0b00552559a613e357c2c2c7bef9bcf5eb88f60d9
+
+* kubectl get nodes              ##Listing all node
+
+
+
+#Step-3.) Set up the local kubeconfig :-
+================================
+* mkdir -p $HOME/.kube
+
+* sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+* sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+* ls -l $HOME/.kube/config
+
+* sudo kubectl version            ##{verifing cluster is responsive & kubectl is working}
+
+
+
+## Now Paste the kubeadm init output which consiste token, on to the WORKER node:-
+ex:- kubeadm join 172.31.24.216:6443 --token lg09jd.5q5vwrspup5xyffv --discovery-token-ca-cert-hash sha256:be1f55415725157a86efbdd0b00552559a613e357c2c2c7bef9bcf5eb88f60d9
+
+
+## Now go back to MASTER node & verify no. of nodes
+---------------------------------------------------------
+
+* kubectl get nodes
 
 ======================================================
+Senerio:-
+===========
+
+Error:- 1.) Packge broken cni=0.7.0-00
 
 sudo apt-get install kubeadm=1.13.4-00 kubelet=1.13.4-00 kubectl=1.13.4-00 kubernetes-cni=0.6.0-00
 
+Error:- 2
 error less than 1 cpu
 solution:- https://codeutility.org/kubernetes-kubadm-init-error-cpus-1-is-less-than-required-2-stack-overflow/
 kubeadm init --pod-network-cidr=10.244.0.0/16  --ignore-preflight-errors=NumCPU  --ignore-preflight-errors=Mem
