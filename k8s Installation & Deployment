@@ -86,8 +86,8 @@ ex:- kubeadm join 172.31.24.216:6443 --token lg09jd.5q5vwrspup5xyffv --discovery
 
 
 
-#Step-3.) Set up the local kubeconfig :-
-================================
+#Step-3.) Set up the local kubeconfig on Master Node :-
+=========================================================
 * mkdir -p $HOME/.kube
 
 * sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
