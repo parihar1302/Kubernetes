@@ -82,8 +82,6 @@ EOF
 * Copy the Output, this contains token that needs to be pasted in Worker node to join in a cluster
 ex:- kubeadm join 172.31.24.216:6443 --token lg09jd.5q5vwrspup5xyffv --discovery-token-ca-cert-hash sha256:be1f55415725157a86efbdd0b00552559a613e357c2c2c7bef9bcf5eb88f60d9
 
-* kubectl get nodes              ##Listing all node
-
 
 
 #Step-3.) Set up the local kubeconfig on Master Node :-
@@ -97,6 +95,8 @@ ex:- kubeadm join 172.31.24.216:6443 --token lg09jd.5q5vwrspup5xyffv --discovery
 * ls -l $HOME/.kube/config
 
 * sudo kubectl version            ##{verifing cluster is responsive & kubectl is working}
+
+* kubectl get nodes              ##Listing all node
 
 
 
