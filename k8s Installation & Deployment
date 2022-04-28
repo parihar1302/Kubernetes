@@ -154,3 +154,4 @@ solution:- https://codeutility.org/kubernetes-kubadm-init-error-cpus-1-is-less-t
 kubeadm init --pod-network-cidr=10.244.0.0/16  --ignore-preflight-errors=NumCPU  --ignore-preflight-errors=Mem
    OR
 kubeadm init --ignore-preflight-errors=all
+
