@@ -1,0 +1,18 @@
+Kubernetes Project SIVISOFT
+===============================
+
+* Having 2 Region:-
+a.) North Varginia
+b.) Mumbai
+
+* Now Mumbai region docker image has to be pushed to N.Varginia Cluster 
+
+* login to mumbai region instance
+ssh -i pemfile ec2-user@ipadd
+
+
+
+
+## Commands:-
+
+* k get pods 
