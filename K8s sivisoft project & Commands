@@ -7,12 +7,29 @@ b.) Mumbai
 
 * Now Mumbai region docker image has to be pushed to N.Varginia Cluster 
 
+##Note:- you can kubernetes cluster only when you have bastion/jump host access
+
 * login to mumbai region instance
 ssh -i pemfile ec2-user@ipadd
 
+sudo -i
 
 
 
 ## Commands:-
 
-* k get pods 
+* k get pods -n sdx-dev     ##{list all the application which are running in sdx-dev namespace}
+
+* k get deploy sdx-ssaiui -o yaml -n sdx-dev |grep image:       ##{excrating/verifing image/build from manifest, copy this image} {sdx-ssaiui is a application here}
+           image:- 23343124257.dkr.ecr.ap-south-1.amazonaws.com/sdx-dev/sdx-ssaiui:456124c
+
+
+##Note:- Now this image has to be deploy in Noth Varginia cluster.
+
+* Now first authenticate the ECR repo:-
+-------------------------------------
+* aws ecr get-login-password --region ap-south-1 | docker login -username AWS --password-stdin 23343124257.dkr.ecr.ap-south-1.amazonaws.com        ##{pivate docker resistory}
+
+* docker pull 23343124257.dkr.ecr.ap-south-1.amazonaws.com/sdx-dev/sdx-ssaiui:456124c        ##{pulling image on local/jump server}
+
+* 
