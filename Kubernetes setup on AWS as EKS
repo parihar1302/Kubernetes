@@ -1,0 +1,81 @@
+## Setting up Kubernetes on AWS as EKS
+===========================================
+
+## EKS :- It is a AWS fully managed K8s service.
+          This consist master & worker nodes. where Master node will be managed by AWS itselft & Worker managed by you as a customer.
+		  ELS cluster automatically creates Master node.
+		  
+
+EKS Workflow:-
+================
+
+Provision EKS cluster   >>>   Deploy Worker Node   >>>    Connect TO EKS   >>>   Deploy & Run K8S apps on EKS cluster,
+
+
+## Note:- EKS can be installed through Console or eksctl command line tool 
+
+--------------------------
+
+
+### Set Up EKS :-
+----------------
+
+* Go to EKS service from aws consol
+
+* Create Role:-    go to IAM role  >>>>  EKS cluster  >>>  AmazonEKSCLusterPolicy
+
+*  Cluster endpoint represent API server in k8s.
+Cluster endpoint >>> Public     ##{for production env select private}
+
+
+   
+##Note:- Idealy master node & worker node should be in a different VPC for higher security. but here using in same.
+
+
+## Step:-2 Install & Configure AWS CLI in windows:-
+-----------------------------------------------------
+
+
+
+## Step:-3 Install Kubectl in windows:-
+-------------------------------------------
+* curl -o kubectl.exe https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/windows/amd64/kubectl.exe        ##{Installing kubectl on windows}
+
+* kubectl --version
+
+
+
+## Step-4.) cluster status check:-
+------------------
+* aws eks --region us-east-2 describe-cluster --name <clustername> --query cluster.status
+
+* aws eks --region us-east-2 update-kubeconfig --name <clustername>              ##{it will create the config file}
+
+* kubectl get svc
+
+
+
+## Step-5.) Go to consol & click on node group  {it's a collection of nodes}
+
+* Attach Role >>> EC2  >>> AmazonEKS_CNI_policy            >>>>    Create Role
+                           AmazonEKSWorkerNodePolicy
+						   AmazonEC2ContainerRegistryReadOnly
+
+
+* save.
+
+
+## go to terminal & type below command
+
+* kubectl get nodes --watch     ##{this will keep on checking the application & if there's any change than this will thorw me the output of that.}
+
+* kubectl get nodes
+
+
+
+
+### Step-6.) Terminate the clster:-
+
+* First delete the worker node from node group.
+
+* Second delete the Cluster.
